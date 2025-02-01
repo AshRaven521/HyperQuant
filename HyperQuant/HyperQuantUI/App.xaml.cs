@@ -1,4 +1,6 @@
-﻿using HyperQuantUI.ViewModel;
+﻿using HyperQuantConnector.REST;
+using HyperQuantUI.Services;
+using HyperQuantUI.ViewModel;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Windows;
@@ -16,6 +18,8 @@ namespace HyperQuantUI
             AppHost = Host.CreateDefaultBuilder()
                 .ConfigureServices((hostContext, services) =>
                 {
+                    services.AddScoped<IRESTClient, RESTClient>();
+                    services.AddScoped<IDialogService, DialogService>();
                     services.AddScoped<MainViewModel>();
                     services.AddSingleton<MainWindow>();
                 })

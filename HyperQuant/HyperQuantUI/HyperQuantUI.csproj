@@ -10,12 +10,15 @@
 
   <ItemGroup>
     <Folder Include="Model\" />
-    <Folder Include="View\" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.1" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\HyperQuantConnector\HyperQuantConnector.csproj" />
   </ItemGroup>
 
 </Project>

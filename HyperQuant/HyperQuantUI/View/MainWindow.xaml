@@ -8,107 +8,38 @@
         xmlns:viewModel="clr-namespace:HyperQuantUI.ViewModel"
         d:DataContext="{d:DesignInstance Type=viewModel:MainViewModel}"
         Title="HyperQuant"
-        Height="450"
+        Height="650"
         Width="800">
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="0.5*"/>
-            <ColumnDefinition Width="0.5*"/>
-        </Grid.ColumnDefinitions>
-
         <Grid.RowDefinitions>
             <RowDefinition Height="0.1*"/>
             <RowDefinition Height="0.8*"/>
         </Grid.RowDefinitions>
-        
-        <DataGrid 
-            x:Name="tradesGrid"
-            ItemsSource="{Binding Trades,
-                        UpdateSourceTrigger=PropertyChanged}"
-            AutoGenerateColumns="False"
-            Grid.Column="0"
-            Grid.Row="1">
-
-            <DataGrid.Columns>
-                
-                <DataGridTextColumn
-                    Header="Id"
-                    Width="0.15*" 
-                    x:Name="idColumn"
-                    IsReadOnly="True"
-                    Binding="{Binding Id, 
-                                NotifyOnTargetUpdated=True,
-                                UpdateSourceTrigger=PropertyChanged}"
-                    />
-                
-                <DataGridTextColumn
-                    Header="Time"
-                    Width="0.3*"
-                    x:Name="timeColumn"
-                    IsReadOnly="True"
-                    Binding="{Binding Time,
-                                NotifyOnTargetUpdated=True,
-                                UpdateSourceTrigger=PropertyChanged,
-                                StringFormat=d}"/>
-
-                <DataGridTextColumn
-                    Header="Pair"
-                    Width="0.2*"
-                    x:Name="pairColumn"
-                    IsReadOnly="True"
-                    Binding="{Binding Pair,
-                                NotifyOnTargetUpdated=True,
-                                UpdateSourceTrigger=PropertyChanged}"/>
-
-                <DataGridTextColumn
-                    Header="Price"
-                    Width="0.2*"
-                    x:Name="priceColumn"
-                    IsReadOnly="True"
-                    Binding="{Binding Price,
-                                NotifyOnTargetUpdated=True,
-                                UpdateSourceTrigger=PropertyChanged}"/>
-
-            </DataGrid.Columns>
-                
-        </DataGrid>
 
         <StackPanel
-            x:Name="tradeUIElementsPanel"
+            x:Name="navigationPanel"
             Orientation="Horizontal"
-            Grid.Column="0"
-            Grid.Row="0">
+            Grid.Row="0"
+            Margin="0,0,0,10">
 
-            <Label Content="Pair: "
-                   Margin="5, 10, 0, 10"/>
-
-            <TextBox x:Name="pairTextBox"
-                     MaxLength="10"
-                     Width="60"
-                     Margin="5, 12, 0, 12"
-                     Text="{Binding PairValue,
-                            Mode=TwoWay,
-                            UpdateSourceTrigger=PropertyChanged}"/>
-
-            <Label Content="Maximum trades count:"
-                   Margin="5, 10, 0, 10"/>
-
-            <TextBox Name="maxTradeCountTextBox"
-                     MaxLength="5"
-                     Width="50"
-                     Margin="5, 12, 0, 12"
-                     Text="{Binding MaxTradesCountValue,
-                            Mode=TwoWay,
-                            UpdateSourceTrigger=PropertyChanged}"/>
-
+            <Button x:Name="navigateToRESTTradeButton"
+                    Content="REST Trade"
+                    Margin="5, 10, 0, 10"
+                    Command="{Binding NavigateToRESTTradeCommand}"/>
 
             <Button 
-                x:Name="testButton"
-                Content="Show Trades"
-                Margin="25, 10, 5, 10"
-                Command="{Binding TestTradesCommand}"
-                />
+                x:Name="navigateToRESTCandleButton"
+                Content="REST Candle"
+                Margin="5, 10, 0, 10"
+                Command="{Binding NavigateToRESTCandleCommand}"/>
+
         </StackPanel>
+
+        <ContentControl x:Name="navigationControl"
+                        Grid.Row="1"
+                        Content="{Binding Navigation.CurrentView}">
+            
+        </ContentControl>
 
     </Grid>
 </Window>

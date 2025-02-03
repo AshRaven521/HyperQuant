@@ -1,8 +1,18 @@
 ﻿<Application x:Class="HyperQuantUI.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:HyperQuantUI">
+             xmlns:local="clr-namespace:HyperQuantUI"
+             xmlns:restViewModel="clr-namespace:HyperQuantUI.ViewModel.REST"
+             xmlns:view="clr-namespace:HyperQuantUI.View">
     <Application.Resources>
-         
+
+        <DataTemplate DataType="{x:Type restViewModel:RESTTradeViewModel}">
+            <view:RESTTradeView/>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type restViewModel:RESTCandleViewModel}">
+            <view:RESTCandleView/>
+        </DataTemplate>
+        
     </Application.Resources>
 </Application>

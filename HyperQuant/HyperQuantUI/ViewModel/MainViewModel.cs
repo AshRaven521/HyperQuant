@@ -1,125 +1,60 @@
-﻿using HyperQuantConnector.Models;
-using HyperQuantConnector.REST;
-using HyperQuantUI.Core;
+﻿using HyperQuantUI.Core;
 using HyperQuantUI.Services;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
+using HyperQuantUI.ViewModel.REST;
 
 namespace HyperQuantUI.ViewModel
 {
-    public class MainViewModel : INotifyPropertyChanged
+    public class MainViewModel : BaseViewModel
     {
-        private readonly IRESTClient restClient;
-        private readonly IDialogService dialogService;
-        public MainViewModel(IRESTClient restClient, IDialogService dialogService)
-        {
-            this.restClient = restClient;
-            this.dialogService = dialogService;
-        }
-
-        private Command testTradesCommand;
-        public Command TestTradesCommand
+        private INavigationService navigation;
+        public INavigationService Navigation
         {
             get
             {
-                if (testTradesCommand == null)
-                {
-                    testTradesCommand = new Command(async () => await ShowTrades());
-                }
-                return testTradesCommand;
-            }
-        }
-
-        private ObservableCollection<Trade> trades = new ObservableCollection<Trade>();
-
-        public ObservableCollection<Trade> Trades
-        {
-            get
-            {
-                return trades;
+                return navigation;
             }
             set
             {
-                if (trades == value)
+                if (navigation == value)
                 {
                     return;
                 }
-                trades = value;
-                OnPropertyChanged(nameof(Trades));
+                navigation = value;
+                OnPropertyChanged(nameof(Navigation));
             }
         }
+        public MainViewModel(INavigationService navigationService)
+        {
+            Navigation = navigationService;
+        }
 
-        private string pairValue;
-        public string PairValue
+        private Command navigateToRESTTradeCommand;
+        public Command NavigateToRESTTradeCommand
         {
             get
             {
-                return pairValue;
-            }
-            set
-            {
-                if (pairValue == value)
+                if (navigateToRESTTradeCommand == null)
                 {
-                    return;
+                    navigateToRESTTradeCommand = new Command(Navigation.NavigateTo<RESTTradeViewModel>);
                 }
-                pairValue = value;
-                OnPropertyChanged(nameof(PairValue));
+
+                return navigateToRESTTradeCommand;
             }
         }
 
-        private string maxTradesCountValue;
-        public string MaxTradesCountValue
+        private Command navigateToRESTCandleCommand;
+        public Command NavigateToRESTCandleCommand
         {
             get
             {
-                return maxTradesCountValue;
-            }
-            set
-            {
-                if (maxTradesCountValue == value)
+                if (navigateToRESTCandleCommand == null)
                 {
-                    return;
+                    navigateToRESTCandleCommand = new Command(Navigation.NavigateTo<RESTCandleViewModel>);
                 }
-                maxTradesCountValue = value;
-                OnPropertyChanged(nameof(MaxTradesCountValue));
+
+                return navigateToRESTCandleCommand;
             }
         }
 
-        public async Task ShowTrades()
-        {
-            if (string.IsNullOrWhiteSpace(pairValue) || string.IsNullOrWhiteSpace(maxTradesCountValue))
-            {
-                dialogService.ShowWarningMessage("Fill text boxes with currency pair and maximum trade count!");
-                return;
-            }
-
-            int maxCount = 0;
-            if (int.TryParse(maxTradesCountValue, out int temp))
-            {
-                maxCount = temp;
-            }
-            else
-            {
-                dialogService.ShowWarningMessage("Entered maximum trade count is not a number!");
-            }
-
-            var downloadedTrades = await restClient.GetNewTradesAsync(pairValue, maxCount);
-
-            if (!downloadedTrades.Any())
-            {
-                dialogService.ShowErrorMessage("BitnefixAPI return empty array!\nPlease check entered currency value. Problem can be here.");
-            }
-
-            Trades = new ObservableCollection<Trade>(downloadedTrades);
-        }
-
-
-
-        public event PropertyChangedEventHandler? PropertyChanged;
-        public void OnPropertyChanged([CallerMemberName] string propName = "")
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
-        }
     }
 }

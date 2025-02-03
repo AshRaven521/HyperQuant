@@ -2,46 +2,35 @@
 {
     public class Candle
     {
-        /// <summary>
-        /// Валютная пара
-        /// </summary>
-        public string Pair { get; set; }
 
-        /// <summary>
-        /// Цена открытия
-        /// </summary>
-        public decimal OpenPrice { get; set; }
-
-        /// <summary>
-        /// Максимальная цена
-        /// </summary>
-        public decimal HighPrice { get; set; }
-
-        /// <summary>
-        /// Минимальная цена
-        /// </summary>
-        public decimal LowPrice { get; set; }
-
-        /// <summary>
-        /// Цена закрытия
-        /// </summary>
-        public decimal ClosePrice { get; set; }
-
-
-        /// <summary>
-        /// Partial (Общая сумма сделок)
-        /// </summary>
-        public decimal TotalPrice { get; set; }
-
-        /// <summary>
-        /// Partial (Общий объем)
-        /// </summary>
-        public decimal TotalVolume { get; set; }
+        /* Пояснение! Оставляю поля в соответствии с документацией: https://docs.bitfinex.com/reference/rest-public-candles */
 
         /// <summary>
         /// Время
         /// </summary>
         public DateTimeOffset OpenTime { get; set; }
+        /// <summary>
+        /// First execution during the time frame
+        /// </summary>
+        public int Open { get; set; }
+        /// <summary>
+        /// Last execution during the time frame
+        /// </summary>
+        public int Close { get; set; }
+        /// <summary>
+        /// Highest execution during the time frame
+        /// </summary>
+        public int High { get; set; }
+        /// <summary>
+        /// Lowest execution during the timeframe
+        /// </summary>
+        public int Low { get; set; }
+        /// <summary>
+        /// Quantity of symbol traded within the timeframe
+        /// </summary>
+        public double Volume { get; set; }
+
+
 
     }
 }

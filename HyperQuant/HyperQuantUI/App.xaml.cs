@@ -1,6 +1,7 @@
 ﻿using HyperQuantConnector.REST;
 using HyperQuantUI.Services;
 using HyperQuantUI.ViewModel;
+using HyperQuantUI.ViewModel.REST;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Windows;
@@ -20,7 +21,11 @@ namespace HyperQuantUI
                 {
                     services.AddScoped<IRESTClient, RESTClient>();
                     services.AddScoped<IDialogService, DialogService>();
-                    services.AddScoped<MainViewModel>();
+                    services.AddSingleton<MainViewModel>();
+                    services.AddSingleton<RESTTradeViewModel>();
+                    services.AddSingleton<RESTCandleViewModel>();
+                    services.AddSingleton<INavigationService, NavigationService>();
+                    services.AddSingleton<Func<Type, BaseViewModel>>(viewModelType => (BaseViewModel)AppHost.Services.GetRequiredService(viewModelType));
                     services.AddSingleton<MainWindow>();
                 })
                 .Build();

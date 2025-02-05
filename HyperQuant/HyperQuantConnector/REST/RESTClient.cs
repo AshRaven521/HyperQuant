@@ -11,15 +11,30 @@ namespace HyperQuantConnector.REST
             string periodParam = CustomConverter.GetCandleQueryParamByPeriod(periodInSec);
 
             StringBuilder uriBuilder = new StringBuilder();
-
-            if (to == null)
+            // Если приходит funding currency, то получаем все, без аггрегации, т.е. (а30:p2:p30)
+            if (pair.StartsWith('f'))
             {
-                uriBuilder.AppendLine($"https://api-pub.bitfinex.com/v2/candles/trade%3A{periodParam}%3A{pair}/hist?sort=-1&start={from}&limit={count}");
+                if (to == null)
+                {
+                    uriBuilder.AppendLine($"https://api-pub.bitfinex.com/v2/candles/trade%3A{periodParam}%3A{pair}%3Aa30%3Ap2%3Ap30/hist?sort=-1&start={from}&limit={count}");
+                }
+                else
+                {
+                    uriBuilder.AppendLine($"https://api-pub.bitfinex.com/v2/candles/trade%3A{periodParam}%3A{pair}%3Aa30%3Ap2%3Ap30/hist?sort=-1&start={from}&end={to}&limit={count}");
+                }
             }
             else
             {
-                uriBuilder.AppendLine($"https://api-pub.bitfinex.com/v2/candles/trade%3A{periodParam}%3A{pair}/hist?sort=-1&start={from}&end={to}&limit={count}");
+                if (to == null)
+                {
+                    uriBuilder.AppendLine($"https://api-pub.bitfinex.com/v2/candles/trade%3A{periodParam}%3A{pair}/hist?sort=-1&start={from}&limit={count}");
+                }
+                else
+                {
+                    uriBuilder.AppendLine($"https://api-pub.bitfinex.com/v2/candles/trade%3A{periodParam}%3A{pair}/hist?sort=-1&start={from}&end={to}&limit={count}");
+                }
             }
+
 
             var options = new RestClientOptions(uriBuilder.ToString());
             var client = new RestClient(options);
@@ -49,11 +64,16 @@ namespace HyperQuantConnector.REST
 
             if (response.IsSuccessful && !string.IsNullOrWhiteSpace(response.Content))
             {
+                if (pair.StartsWith('f'))
+                {
+                    var fundingTrades = CustomConverter.ParseTrades(response.Content, true).ToList();
+                    return fundingTrades;
+                }
                 var trades = CustomConverter.ParseTrades(response.Content).ToList();
 
                 return trades;
             }
-            
+
             return new List<Trade>();
 
         }

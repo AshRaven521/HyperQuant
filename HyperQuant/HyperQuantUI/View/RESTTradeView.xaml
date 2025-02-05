@@ -63,6 +63,24 @@
                                 NotifyOnTargetUpdated=True,
                                 UpdateSourceTrigger=PropertyChanged}"/>
 
+                <DataGridTextColumn
+                    Header="Rate"
+                    Width="0.2*"
+                    x:Name="rateColumn"
+                    IsReadOnly="True"
+                    Binding="{Binding Rate,
+                                NotifyOnTargetUpdated=True,
+                                UpdateSourceTrigger=PropertyChanged}"/>
+
+                <DataGridTextColumn
+                    Header="Period"
+                    Width="0.2*"
+                    x:Name="periodColumn"
+                    IsReadOnly="True"
+                    Binding="{Binding Period,
+                                NotifyOnTargetUpdated=True,
+                                UpdateSourceTrigger=PropertyChanged}"/>
+
             </DataGrid.Columns>
 
         </DataGrid>

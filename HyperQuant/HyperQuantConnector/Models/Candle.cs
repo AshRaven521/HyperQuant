@@ -12,19 +12,19 @@
         /// <summary>
         /// First execution during the time frame
         /// </summary>
-        public int Open { get; set; }
+        public double Open { get; set; }
         /// <summary>
         /// Last execution during the time frame
         /// </summary>
-        public int Close { get; set; }
+        public double Close { get; set; }
         /// <summary>
         /// Highest execution during the time frame
         /// </summary>
-        public int High { get; set; }
+        public double High { get; set; }
         /// <summary>
         /// Lowest execution during the timeframe
         /// </summary>
-        public int Low { get; set; }
+        public double Low { get; set; }
         /// <summary>
         /// Quantity of symbol traded within the timeframe
         /// </summary>

@@ -1,8 +1,6 @@
 ﻿using HyperQuantConnector.Models;
-using System.Diagnostics;
 using System.Globalization;
-using System.Runtime.InteropServices;
-using System.Text;
+using System.Text.RegularExpressions;
 
 namespace HyperQuantConnector
 {
@@ -11,7 +9,7 @@ namespace HyperQuantConnector
         /* Парсим вручную ответ с API Bitnefix при запросе данных на пару валют */
         public static IEnumerable<Trade> ParseTrades(string json, bool isFundingCurrency = false)
         {
-            var dataArray = json.Replace(']', ' ');
+            var dataArray = json.Replace(']', ',');
             var splittedDataArray = dataArray.Split('[');
 
             List<Trade> result = new List<Trade>();
@@ -23,32 +21,30 @@ namespace HyperQuantConnector
                     continue;
                 }
                 var splittedByComaArray = splittedData.Split(',');
-
-                IFormatProvider formatter = new NumberFormatInfo { NumberDecimalSeparator = "." };
-
-                Trade trade = new Trade();
-                // Если рассматриваем пару валют (например, tBTCUSD). Иначе, если рассматриваем funding currency (например, fUSD), то поля объекта заполняем немного по-другому
-                if (!isFundingCurrency)
+                // Если в массиве есто хоть одна строка, в которой есть хоть одна буква, то пропускаем
+                if (splittedByComaArray.Any(str => Regex.Matches(str, @"[a-zA-Z]").Any()))
                 {
-                    trade.Id = splittedByComaArray[0];
-                    trade.Time = DateTimeOffset.FromUnixTimeMilliseconds(long.Parse(splittedByComaArray[1]));
-                    trade.Pair = splittedByComaArray[2];
-                    trade.Price = decimal.Parse(splittedByComaArray[3], formatter);
-                    trade.Rate = null;
-                    trade.Period = null;
+                    continue;
                 }
-                else
+
+                //Приходит строка, в которой после парсинга на данный момент выполнения метода получается 2 Trade в одной строке, а парсится как 1. Сделаю проверку, чтобы только эту строку распарсить как 2 Trade
+                if (splittedByComaArray.Length > 10)
                 {
-                    trade.Id = splittedByComaArray[0];
-                    trade.Time = DateTimeOffset.FromUnixTimeMilliseconds(long.Parse(splittedByComaArray[1]));
-                    trade.Pair = splittedByComaArray[2];
-                    trade.Price = null;
-                    trade.Rate = float.Parse(splittedByComaArray[3], formatter);
-                    trade.Period = int.Parse(splittedByComaArray[4]);
+                    //var firstPart = splittedByComaArray.TakeWhile(x => !string.IsNullOrWhiteSpace(x)).ToArray();
+                    var firstPart = splittedByComaArray.Take(splittedByComaArray.Length / 2).ToArray();
+                    Trade firstTrade = CreateTrade(isFundingCurrency, firstPart);
+                    result.Add(firstTrade);
+
+                    //var secondPart = splittedByComaArray.SkipWhile(x => !string.IsNullOrWhiteSpace(x)).ToArray();
+                    var secondPart = splittedByComaArray.Skip(splittedByComaArray.Length / 2).ToArray();
+                    Trade secondTrade = CreateTrade(isFundingCurrency, secondPart);
+                    result.Add(secondTrade);
+                    continue;
                 }
+
+                Trade trade = CreateTrade(isFundingCurrency, splittedByComaArray);
 
                 result.Add(trade);
-
             }
 
 
@@ -108,6 +104,33 @@ namespace HyperQuantConnector
             return ConnectorConstants.QueryPeriodInSeconds[param];
         }
 
-       
+        private static Trade CreateTrade(bool isCurrency, string[] data)
+        {
+            Trade trade = new Trade();
+            IFormatProvider formatter = new NumberFormatInfo { NumberDecimalSeparator = "." };
+            // Если рассматриваем пару валют (например, tBTCUSD). Иначе, если рассматриваем funding currency (например, fUSD), то поля объекта заполняем немного по-другому
+            if (!isCurrency)
+            {
+                trade.Id = data[0];
+                trade.Time = DateTimeOffset.FromUnixTimeMilliseconds(long.Parse(data[1]));
+                trade.Pair = data[2];
+                trade.Price = decimal.Parse(data[3], formatter);
+                trade.Rate = null;
+                trade.Period = null;
+            }
+            else
+            {
+                trade.Id = data[0];
+                trade.Time = DateTimeOffset.FromUnixTimeMilliseconds(long.Parse(data[1]));
+                trade.Pair = data[2];
+                trade.Price = null;
+                trade.Rate = float.Parse(data[3], formatter);
+                trade.Period = int.Parse(data[4]);
+            }
+
+            return trade;
+        }
+
+
     }
 }

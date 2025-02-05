@@ -22,9 +22,11 @@
         /// <summary>
         /// Цена трейда
         /// </summary>
-        public decimal Price { get; set; }
+        public decimal? Price { get; set; }
 
+        // Для funding currency добавлю nullable поля
+        public float? Rate { get; set; }
 
-
+        public int? Period { get; set; }
     }
 }

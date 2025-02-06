@@ -1,4 +1,4 @@
-﻿namespace HyperQuantConnector
+﻿namespace HyperQuantConnector.Heplers
 {
     public class ConnectorConstants
     {

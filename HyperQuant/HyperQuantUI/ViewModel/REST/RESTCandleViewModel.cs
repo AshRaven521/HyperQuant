@@ -1,4 +1,4 @@
-﻿using HyperQuantConnector;
+﻿using HyperQuantConnector.Heplers;
 using HyperQuantConnector.Models;
 using HyperQuantConnector.REST;
 using HyperQuantUI.Core;
@@ -173,12 +173,8 @@ namespace HyperQuantUI.ViewModel.REST
 
             int period = CustomConverter.GetCandlePeriodByQueryParam(selectedQueryParam);
 
-            //long startDateInMilliseconds = (long)selectedStartDate.ToUniversalTime().Subtract(new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalMilliseconds;
-
-            //selectedStartDate = DateTime.SpecifyKind(selectedStartDate, DateTimeKind.Utc);
             DateTimeOffset startDateOffset = selectedStartDate;
 
-            //selectedEndDate = DateTime.SpecifyKind(selectedEndDate, DateTimeKind.Utc);
             DateTimeOffset? endDateOffset = selectedEndDate;
 
             int maxCount = 0;
@@ -189,6 +185,7 @@ namespace HyperQuantUI.ViewModel.REST
             else
             {
                 dialogService.ShowWarningMessage("Entered maximum trade count is not a number!");
+                return;
             }
 
 

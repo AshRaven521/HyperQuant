@@ -33,6 +33,17 @@
                 Margin="5, 10, 0, 10"
                 Command="{Binding NavigateToRESTCandleCommand}"/>
 
+            <Button 
+                x:Name="navigateToRESTTickerButton"
+                Content="REST Ticker"
+                Margin="5, 10, 0, 10"
+                Command="{Binding NavigateToRESTTickerCommand}"/>
+            
+            
+
+            
+
+
         </StackPanel>
 
         <ContentControl x:Name="navigationControl"

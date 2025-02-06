@@ -1,4 +1,5 @@
-﻿using HyperQuantConnector.Models;
+﻿using HyperQuantConnector.Heplers;
+using HyperQuantConnector.Models;
 using RestSharp;
 using System.Text;
 
@@ -76,6 +77,31 @@ namespace HyperQuantConnector.REST
 
             return new List<Trade>();
 
+        }
+
+        public async Task<IEnumerable<Ticker>> GetTickersAsync(string pair)
+        {
+            var options = new RestClientOptions($"https://api-pub.bitfinex.com/v2/ticker/{pair}");
+            var client = new RestClient(options);
+            var request = new RestRequest("");
+
+            request.AddHeader("accept", "application/json");
+
+            var response = await client.GetAsync(request);
+
+            if (response.IsSuccessful && !string.IsNullOrWhiteSpace(response.Content))
+            {
+                if(pair.StartsWith('f'))
+                {
+                    var fundingTickers = CustomConverter.ParseTickers(response.Content, true).ToList();
+                    return fundingTickers;
+                }
+                var tickers = CustomConverter.ParseTickers(response.Content).ToList();
+
+                return tickers;
+            }
+
+            return new List<Ticker>();
         }
     }
 }

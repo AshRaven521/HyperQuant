@@ -1,6 +1,8 @@
 ﻿using HyperQuantUI.Core;
 using HyperQuantUI.Services;
 using HyperQuantUI.ViewModel.REST;
+using HyperQuantUI.ViewModel.Wallet;
+using HyperQuantUI.ViewModel.WebSocket;
 
 namespace HyperQuantUI.ViewModel
 {
@@ -53,6 +55,20 @@ namespace HyperQuantUI.ViewModel
                 }
 
                 return navigateToRESTCandleCommand;
+            }
+        }
+
+        
+        private Command navigateToRESTTickerCommand;
+        public Command NavigateToRESTTickerCommand
+        {
+            get
+            {
+                if (navigateToRESTTickerCommand == null)
+                {
+                    navigateToRESTTickerCommand = new Command(Navigation.NavigateTo<RESTTickerViewModel>);
+                }
+                return navigateToRESTTickerCommand;
             }
         }
 

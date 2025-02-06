@@ -16,9 +16,17 @@
             <view:RESTCandleView/>
         </DataTemplate>
 
-        
+        <DataTemplate DataType="{x:Type webSocketViewModel:WebSocketTradeViewModel}">
+            <view:WebSocketTradeView/>
+        </DataTemplate>
 
-        
+        <DataTemplate DataType="{x:Type webSocketViewModel:WebSocketCandleViewModel}">
+            <view:WebSocketCandleView/>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type walletViewModel:WalletViewModel}">
+            <view:WalletView/>
+        </DataTemplate>
 
         <DataTemplate DataType="{x:Type restViewModel:RESTTickerViewModel}">
             <view:RESTTickerView/>

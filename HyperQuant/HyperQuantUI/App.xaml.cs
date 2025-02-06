@@ -1,7 +1,11 @@
-﻿using HyperQuantConnector.REST;
+﻿using HyperQuantConnector.CoinLayer;
+using HyperQuantConnector.REST;
+using HyperQuantConnector.WebSocket;
 using HyperQuantUI.Services;
 using HyperQuantUI.ViewModel;
 using HyperQuantUI.ViewModel.REST;
+using HyperQuantUI.ViewModel.Wallet;
+using HyperQuantUI.ViewModel.WebSocket;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Windows;
@@ -24,6 +28,7 @@ namespace HyperQuantUI
                     services.AddSingleton<MainViewModel>();
                     services.AddSingleton<RESTTradeViewModel>();
                     services.AddSingleton<RESTCandleViewModel>();
+                    services.AddSingleton<RESTTickerViewModel>();
                     services.AddSingleton<INavigationService, NavigationService>();
                     services.AddSingleton<Func<Type, BaseViewModel>>(viewModelType => (BaseViewModel)AppHost.Services.GetRequiredService(viewModelType));
                     services.AddSingleton<MainWindow>();

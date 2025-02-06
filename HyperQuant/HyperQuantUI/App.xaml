@@ -3,6 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:HyperQuantUI"
              xmlns:restViewModel="clr-namespace:HyperQuantUI.ViewModel.REST"
+             xmlns:webSocketViewModel="clr-namespace:HyperQuantUI.ViewModel.WebSocket"
+             xmlns:walletViewModel="clr-namespace:HyperQuantUI.ViewModel.Wallet"
              xmlns:view="clr-namespace:HyperQuantUI.View">
     <Application.Resources>
 
@@ -12,6 +14,14 @@
 
         <DataTemplate DataType="{x:Type restViewModel:RESTCandleViewModel}">
             <view:RESTCandleView/>
+        </DataTemplate>
+
+        
+
+        
+
+        <DataTemplate DataType="{x:Type restViewModel:RESTTickerViewModel}">
+            <view:RESTTickerView/>
         </DataTemplate>
         
     </Application.Resources>

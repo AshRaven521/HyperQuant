@@ -41,7 +41,10 @@
             
             
 
-            
+            <Button x:Name="navigateToBriefCaseNutton"
+                    Content="Crypto Brief Case"
+                    Margin="5, 10, 0, 10"
+                    Command="{Binding NavigateToBriefCase}"/>
 
 
         </StackPanel>

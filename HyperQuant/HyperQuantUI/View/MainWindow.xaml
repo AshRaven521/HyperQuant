@@ -39,7 +39,17 @@
                 Margin="5, 10, 0, 10"
                 Command="{Binding NavigateToRESTTickerCommand}"/>
             
-            
+            <Button
+                x:Name="navigateToWebSocketTradeButton"
+                Content="Web Socket Trade"
+                Margin="5, 10, 0, 10"
+                Command="{Binding NavigateToWebSocketTradeCommand}"/>
+
+            <Button
+                x:Name="navigateToWebSocketCandleButton"
+                Content="Web Socket Candle"
+                Margin="5, 10, 0, 10"
+                Command="{Binding NavigateToWebSocketCandleCommand}"/>
 
             <Button x:Name="navigateToBriefCaseNutton"
                     Content="Crypto Brief Case"

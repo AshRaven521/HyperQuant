@@ -58,7 +58,32 @@ namespace HyperQuantUI.ViewModel
             }
         }
 
-        
+        private Command navigateToWebSocketTradeCommand;
+        public Command NavigateToWebSocketTradeCommand
+        {
+            get
+            {
+                if (navigateToWebSocketTradeCommand == null)
+                {
+                    navigateToWebSocketTradeCommand = new Command(Navigation.NavigateTo<WebSocketTradeViewModel>);
+                }
+
+                return navigateToWebSocketTradeCommand;
+            }
+        }
+
+        private Command navigateToWebSocketCandleCommand;
+        public Command NavigateToWebSocketCandleCommand
+        {
+            get
+            {
+                if (navigateToWebSocketCandleCommand == null)
+                {
+                    navigateToWebSocketCandleCommand = new Command(Navigation.NavigateTo<WebSocketCandleViewModel>);
+                }
+                return navigateToWebSocketCandleCommand;
+            }
+        }
 
         private Command navigateToBriefCase;
         public Command NavigateToBriefCase

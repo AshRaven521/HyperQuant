@@ -59,6 +59,20 @@ namespace HyperQuantUI.ViewModel
         }
 
         
+
+        private Command navigateToWallet;
+        public Command NavigateToWallet
+        {
+            get
+            {
+                if (navigateToWallet == null)
+                {
+                    navigateToWallet = new Command(Navigation.NavigateTo<WalletViewModel>);
+                }
+                return navigateToWallet;
+            }
+        }
+
         private Command navigateToRESTTickerCommand;
         public Command NavigateToRESTTickerCommand
         {

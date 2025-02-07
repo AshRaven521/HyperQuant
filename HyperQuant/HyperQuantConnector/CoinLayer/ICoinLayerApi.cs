@@ -1,5 +1,4 @@
-﻿
-using HyperQuantConnector.Models;
+﻿using HyperQuantConnector.Models.Crypto;
 
 namespace HyperQuantConnector.CoinLayer
 {

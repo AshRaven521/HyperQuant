@@ -1,6 +1,6 @@
 ﻿using HyperQuantConnector.CoinLayer;
 using HyperQuantConnector.Exceptions;
-using HyperQuantConnector.Models;
+using HyperQuantConnector.Models.Crypto;
 using HyperQuantUI.Core;
 using HyperQuantUI.Services;
 using System.Collections.ObjectModel;

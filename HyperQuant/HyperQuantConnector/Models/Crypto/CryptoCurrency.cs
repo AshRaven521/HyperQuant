@@ -1,4 +1,4 @@
-﻿namespace HyperQuantConnector.Models
+﻿namespace HyperQuantConnector.Models.Crypto
 {
     public class CryptoCurrency
     {

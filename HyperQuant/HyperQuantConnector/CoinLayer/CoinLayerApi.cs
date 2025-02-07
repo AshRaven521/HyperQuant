@@ -1,6 +1,6 @@
 ﻿using HyperQuantConnector.Exceptions;
 using HyperQuantConnector.Heplers;
-using HyperQuantConnector.Models;
+using HyperQuantConnector.Models.Crypto;
 using RestSharp;
 using System.Globalization;
 using System.Runtime.CompilerServices;

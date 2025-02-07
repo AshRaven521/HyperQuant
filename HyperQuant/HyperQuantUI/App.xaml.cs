@@ -24,11 +24,13 @@ namespace HyperQuantUI
                 .ConfigureServices((hostContext, services) =>
                 {
                     services.AddScoped<IRESTClient, RESTClient>();
+                    services.AddScoped<ICoinLayerApi, CoinLayerApi>();
                     services.AddScoped<IDialogService, DialogService>();
                     services.AddSingleton<MainViewModel>();
                     services.AddSingleton<RESTTradeViewModel>();
                     services.AddSingleton<RESTCandleViewModel>();
                     services.AddSingleton<RESTTickerViewModel>();
+                    services.AddSingleton<WalletViewModel>();
                     services.AddSingleton<INavigationService, NavigationService>();
                     services.AddSingleton<Func<Type, BaseViewModel>>(viewModelType => (BaseViewModel)AppHost.Services.GetRequiredService(viewModelType));
                     services.AddSingleton<MainWindow>();

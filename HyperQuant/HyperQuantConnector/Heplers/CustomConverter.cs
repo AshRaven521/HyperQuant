@@ -1,5 +1,6 @@
 ﻿using HyperQuantConnector.Models;
 using System.Globalization;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace HyperQuantConnector.Heplers
@@ -105,7 +106,7 @@ namespace HyperQuantConnector.Heplers
                 }
                 var candleFiledsWithoutTime = splittedByComaArray.Skip(0).Take(5);
                 // Проверяю элементы массива с индексами 1 - 5 на возможность преобразования в double. Если преобразование невозможно, пропускаю итерацию
-                if (splittedByComaArray.Skip(0).Take(5).Any(x => !double.TryParse(x, out _)))
+                if (splittedByComaArray.Skip(0).Take(5).Any(x => !double.TryParse(x, formatter, out _)))
                 {
                     continue;
                 }
@@ -126,6 +127,23 @@ namespace HyperQuantConnector.Heplers
 
 
             return result;
+        }
+
+        public static string GetWebSocketCandleChannelId(string response)
+        {
+
+            // Беру элементы из входной строки начиная с элемента после '[' и до следующей ','
+            var possibleId = response.Skip(1).TakeWhile(ch => ch != ',');
+
+            var possibleIdStr = string.Join("", possibleId);
+
+
+            if (int.TryParse(possibleIdStr, out _))
+            {
+                return possibleIdStr;
+            }
+            return string.Empty;
+
         }
 
         public static string GetCandleQueryParamByPeriod(int period)

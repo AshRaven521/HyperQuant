@@ -1,31 +1,185 @@
-﻿using HyperQuantConnector.Models;
+﻿using HyperQuantConnector.Heplers;
+using HyperQuantConnector.Models;
+using HyperQuantConnector.WebSocket.Models;
+using System.Net.Sockets;
+using System.Net.WebSockets;
+using System.Text;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 
 namespace HyperQuantConnector.WebSocket
 {
     public class WebSocketClient : IWebSocketClient
     {
+
         public event Action<Trade> NewBuyTrade;
         public event Action<Trade> NewSellTrade;
         public event Action<Candle> CandleSeriesProcessing;
-
-        public void SubscribeCandles(string pair, int periodInSec, DateTimeOffset? from = null, DateTimeOffset? to = null, long? count = 0)
+        private IEnumerable<Trade> parsedTrades;
+        public IEnumerable<Trade> ParsedTrades 
         {
-            throw new NotImplementedException();
+            get
+            {
+                return parsedTrades;
+            }
         }
 
-        public void SubscribeTrades(string pair, int maxCount = 100)
+
+        public WebSocketClient() 
         {
-            throw new NotImplementedException();
+            NewBuyTrade += TradeActionHandle;
+        }
+
+        private void TradeActionHandle(Trade trade)
+        {
+            //progress.Report(new TradeEventArgs(trade));
+        }
+
+        public async Task SubscribeCandles(string pair, int periodInSec, DateTimeOffset? from = null, DateTimeOffset? to = null, long? count = 0)
+        {
+            using var socket = new ClientWebSocket();
+            await socket.ConnectAsync(new Uri("wss://api-pub.bitfinex.com/ws/2"), CancellationToken.None);
+
+            string periodParam = CustomConverter.GetCandleQueryParamByPeriod(periodInSec);
+
+            StringBuilder key = new StringBuilder();
+            if (pair.StartsWith('t'))
+            {
+                key.AppendLine($"trade:{periodParam}:{pair}");
+            }
+            else
+            {
+                key.AppendLine($"trade:{periodParam}:{pair}:a10:p2:p10");
+            }
+
+            var message = new WebSocketCandleMessage
+            {
+                EventType = "subscribe",
+                Channel = "candles",
+                Key = key.ToString().Replace("\r\n", string.Empty)
+            };
+
+            var requestMessageJsonBytes = JsonSerializer.SerializeToUtf8Bytes(message);
+            ArraySegment<byte> requestMessageByte = new ArraySegment<byte>(requestMessageJsonBytes);
+
+            await socket.SendAsync(requestMessageByte, WebSocketMessageType.Text, true, CancellationToken.None);
+
+            bool isCandleArrayStarted = false;
+
+            ArraySegment<byte> responseMessageByte = new ArraySegment<byte>(new byte[1024 * 4]);
+            var responseBuilder = new StringBuilder();
+
+            while (true)
+            {
+
+                var response = await socket.ReceiveAsync(responseMessageByte, CancellationToken.None);
+
+                if (response.MessageType == WebSocketMessageType.Close)
+                {
+                    await socket.CloseAsync(WebSocketCloseStatus.NormalClosure, "", CancellationToken.None);
+                }
+
+                if (response.MessageType == WebSocketMessageType.Text)
+                {
+
+
+
+                    string responseMessage = Encoding.UTF8.GetString(responseMessageByte);
+                    // Пропускаем hb сообщения и сообщения со словом event, чтобы в парсер передавать только сообщения с candles
+                    if (responseMessage.Contains("hb") || responseMessage.Contains("event"))
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        // Пробую получить channelId. Если успешно, вернется id, иначе вернется пустая строка
+                        //string channelId = CustomConverter.GetWebSocketCandleChannelId(responseMessage);
+                        //if (!string.IsNullOrWhiteSpace(channelId))
+                        //{
+                        //    //Собираем ответ в одно целое c проверки на наличие channelId
+
+                        //    responseBuilder.Append(responseMessage);
+
+                        //}
+                        responseBuilder.Append(responseMessage);
+
+                    }
+
+                    //if (responseMessage.StartsWith($"[{}"))
+
+                    var candles = CustomConverter.ParseCandles(responseBuilder.ToString());
+                }
+            }
+        }
+
+        public async Task SubscribeTrades(string pair, int maxCount = 100)
+        {
+            using var clientSocket = new ClientWebSocket();
+            await clientSocket.ConnectAsync(new Uri("wss://api-pub.bitfinex.com/ws/2"), CancellationToken.None);
+            
+
+            var requestMessage = new WebSocketTradeMessage
+            {
+                EventType = "subscribe",
+                Channel = "trades",
+                Symbol = pair
+            };
+                
+
+            var requestMessageJsonBytes = JsonSerializer.SerializeToUtf8Bytes(requestMessage);
+            ArraySegment<byte> requestMessageByte = new ArraySegment<byte>(requestMessageJsonBytes);
+
+            await clientSocket.SendAsync(requestMessageByte, WebSocketMessageType.Text, true, CancellationToken.None);
+
+            ArraySegment<byte> responseMessageByte = new ArraySegment<byte>(new byte[1024 * 4]);
+            while(true)
+            {
+
+                var response = await clientSocket.ReceiveAsync(responseMessageByte, CancellationToken.None);
+
+                if (response.MessageType == WebSocketMessageType.Close)
+                {
+                    await clientSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "", CancellationToken.None);
+                }
+
+                if (response.MessageType == WebSocketMessageType.Text)
+                {
+                    string responseMessage = Encoding.UTF8.GetString(responseMessageByte);
+
+                    if (responseMessage.Contains("\0"))
+                    {
+                        responseMessage = responseMessage.Replace("\0", string.Empty);
+                    }
+
+                    //var arr = JsonArray.Parse(responseMessage);
+
+                    //if (arr is JsonArray array)
+                    //{
+
+                    //}
+
+                    if (responseMessage.Contains("te") || responseMessage.Contains("fte"))
+                    {
+                        parsedTrades = CustomConverter.ParseTrades(responseMessage);
+                        break;
+                    }
+
+                }
+            }
+
+
         }
 
         public void UnsubscribeCandles(string pair)
         {
-            throw new NotImplementedException();
+            
         }
 
         public void UnsubscribeTrades(string pair)
         {
-            throw new NotImplementedException();
+            
         }
+
+
     }
 }

@@ -79,6 +79,12 @@ namespace HyperQuantUI.ViewModel.REST
 
             var tickers = await restClient.GetTickersAsync(pairValue);
 
+            if (!tickers.Any())
+            {
+                dialogService.ShowErrorMessage("BitnefixAPI return empty array!\nPlease check entered currency value. Problem can be here.");
+                return;
+            }
+
             Tickers = new ObservableCollection<Ticker>(tickers);
         }
     }

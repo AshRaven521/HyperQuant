@@ -190,6 +190,13 @@ namespace HyperQuantUI.ViewModel.REST
 
 
             var downloadedCandles = await restClient.GetCandleSeriesAsync(pairValue, period, startDateOffset, endDateOffset, maxCount);
+
+            if (!downloadedCandles.Any())
+            {
+                dialogService.ShowErrorMessage("BitnefixAPI return empty array!\nPlease check entered currency value. Problem can be here.");
+                return;
+            }
+
             Candles = new ObservableCollection<Candle>(downloadedCandles);
         }
     }

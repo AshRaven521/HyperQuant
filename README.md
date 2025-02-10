@@ -51,7 +51,7 @@
 
 ![image_alt](https://github.com/AshRaven521/HyperQuant/blob/d58105907a5be366ca70b2bb3c96680af2d59f2f/screenshots/crypto_brief_button.jpg)
 
-#### Выбор локального конфигурационного файла (пример файла в разделе [Использование]) после нажатия кнопки "Select config file"
+#### Выбор локального конфигурационного файла (пример файла в разделе [#использование]) после нажатия кнопки "Select config file"
 
 ![image_alt](https://github.com/AshRaven521/HyperQuant/blob/d58105907a5be366ca70b2bb3c96680af2d59f2f/screenshots/select_config_button.jpg)
 

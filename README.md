@@ -69,6 +69,6 @@
 
 
 ## To do
-- [] Доработать получение trades, candles по WebSocket 
+- Доработать получение trades, candles по WebSocket 
 
  

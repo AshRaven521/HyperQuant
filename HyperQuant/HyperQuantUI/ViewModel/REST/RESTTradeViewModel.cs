@@ -109,6 +109,7 @@ namespace HyperQuantUI.ViewModel.REST
             if (!downloadedTrades.Any())
             {
                 dialogService.ShowErrorMessage("BitnefixAPI return empty array!\nPlease check entered currency value. Problem can be here.");
+                return;
             }
 
             Trades = new ObservableCollection<Trade>(downloadedTrades);

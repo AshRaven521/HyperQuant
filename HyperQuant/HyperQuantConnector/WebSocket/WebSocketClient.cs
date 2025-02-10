@@ -92,22 +92,11 @@ namespace HyperQuantConnector.WebSocket
                     }
                     else
                     {
-                        // Пробую получить channelId. Если успешно, вернется id, иначе вернется пустая строка
-                        //string channelId = CustomConverter.GetWebSocketCandleChannelId(responseMessage);
-                        //if (!string.IsNullOrWhiteSpace(channelId))
-                        //{
-                        //    //Собираем ответ в одно целое c проверки на наличие channelId
-
-                        //    responseBuilder.Append(responseMessage);
-
-                        //}
-                        responseBuilder.Append(responseMessage);
+                        //responseBuilder.Append(responseMessage);
 
                     }
 
-                    //if (responseMessage.StartsWith($"[{}"))
-
-                    var candles = CustomConverter.ParseCandles(responseBuilder.ToString());
+                    //var candles = CustomConverter.ParseCandles(responseBuilder.ToString());
                 }
             }
         }
@@ -150,13 +139,6 @@ namespace HyperQuantConnector.WebSocket
                     {
                         responseMessage = responseMessage.Replace("\0", string.Empty);
                     }
-
-                    //var arr = JsonArray.Parse(responseMessage);
-
-                    //if (arr is JsonArray array)
-                    //{
-
-                    //}
 
                     if (responseMessage.Contains("te") || responseMessage.Contains("fte"))
                     {
